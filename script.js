@@ -1,4 +1,5 @@
-// Datos: Semestres y requisitos (puedes añadir más relaciones si lo deseas)
+// --- DATOS DE MALLA ---
+
 const malla = {
   "1º semestre": [
     "Socioantropología Educacional",
@@ -28,7 +29,7 @@ const malla = {
     "Inclusión y Contextos Educativos en Educación Parvularia",
     "Interpretación de la Conducta Infantil",
     "Desarrollo de Funciones Emocionales y Cognitivas del Párvulo",
-    "Bases Biológicas y Ecológicas del Desarrollo Humano I",
+    "Bases Biológicas y Ecológicas del Desarrollo Humano II",
     "Pedagogía de la Identidad de Género",
     "Teorías de la Educación"
   ],
@@ -37,7 +38,7 @@ const malla = {
     "Apreciación y Expresión Musical del/la Educador/a de Párvulos",
     "Curriculum de la Educación Parvularia",
     "Diseño Curricular de la Educación Parvularia I",
-    "Didáctica del Pensamiento Matemático en Educación Parvularia",
+    "Diseño Curricular de la Educación Parvularia Didáctica del Pensamiento Matemático en Educación Parvularia",
     "Epistemología y Paradigmas de la Investigación Educativa"
   ],
   "6º semestre": [
@@ -76,18 +77,24 @@ const malla = {
   ]
 };
 
-// Requisitos de ejemplo: puedes personalizar más
+// --- REQUISITOS BLOQUEANTES ---
+
 const requisitos = {
-  "Bases Biológicas y Ecológicas del Desarrollo Humano I": ["Procesos Psicológicos del Desarrollo Humano"],
+  "Bases Biológicas y Ecológicas del Desarrollo Humano II": ["Bases Biológicas y Ecológicas del Desarrollo Humano I"],
   "Diseño Curricular de la Educación Parvularia II": ["Diseño Curricular de la Educación Parvularia I"],
   "Diseño de Procesos Evaluativos en Educación Parvularia II": ["Diseño de Procesos Evaluativos en Educación Parvularia I"],
-  "Práctica Profesional": ["Práctica Pedagógica Nivel de Transición", "Trabajo de Integración Disciplinar Didáctico en Educación Parvularia"]
+  "Práctica Profesional": [
+    "Práctica Pedagógica Nivel de Transición",
+    "Trabajo de Integración Disciplinar Didáctico en Educación Parvularia"
+  ]
 };
 
-const mallaContainer = document.getElementById("malla");
+// --- FUNCIONALIDAD PRINCIPAL ---
+
+const contenedor = document.getElementById("malla");
 const mensaje = document.getElementById("mensaje");
 
-const aprobados = new Set(JSON.parse(localStorage.getItem("aprobados")) || []);
+let aprobados = new Set(JSON.parse(localStorage.getItem("aprobados") || "[]"));
 
 function guardarEstado() {
   localStorage.setItem("aprobados", JSON.stringify([...aprobados]));
@@ -96,40 +103,43 @@ function guardarEstado() {
 function mostrarMensaje(texto) {
   mensaje.textContent = texto;
   mensaje.classList.add("visible");
-  setTimeout(() => mensaje.classList.remove("visible"), 3500);
+  setTimeout(() => mensaje.classList.remove("visible"), 3000);
 }
 
 function renderMalla() {
-  mallaContainer.innerHTML = "";
+  contenedor.innerHTML = "";
+
   for (const [semestre, ramos] of Object.entries(malla)) {
     const columna = document.createElement("div");
     columna.className = "semestre";
+
     const titulo = document.createElement("h2");
     titulo.textContent = semestre;
     columna.appendChild(titulo);
 
     ramos.forEach(ramo => {
       const boton = document.createElement("button");
-      boton.textContent = ramo;
       boton.className = "ramo";
+      boton.textContent = ramo;
 
-      const faltantes = requisitos[ramo]?.filter(req => !aprobados.has(req)) || [];
+      const faltan = (requisitos[ramo] || []).filter(req => !aprobados.has(req));
 
       if (aprobados.has(ramo)) {
         boton.classList.add("aprobado");
-      } else if (faltantes.length > 0) {
+      } else if (faltan.length > 0) {
         boton.classList.add("bloqueado");
       }
 
       boton.addEventListener("click", () => {
         if (aprobados.has(ramo)) {
           aprobados.delete(ramo);
-        } else if (faltantes.length > 0) {
-          mostrarMensaje(`Faltan: ${faltantes.join(", ")}`);
+        } else if (faltan.length > 0) {
+          mostrarMensaje(`Faltan por aprobar: ${faltan.join(", ")}`);
           return;
         } else {
           aprobados.add(ramo);
         }
+
         guardarEstado();
         renderMalla();
       });
@@ -137,9 +147,8 @@ function renderMalla() {
       columna.appendChild(boton);
     });
 
-    mallaContainer.appendChild(columna);
+    contenedor.appendChild(columna);
   }
 }
 
 renderMalla();
-
