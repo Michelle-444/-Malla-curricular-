@@ -1,1 +1,102 @@
+/* Paleta: rosa pastel, blanco, acento suave */
+
+:root {
+  --fondo: #fff0f5;
+  --rosa: #f9c5d1;
+  --rosado: #f7a8b8;
+  --rosado-suave: #fde3ea;
+  --texto: #333;
+  --aprobado: #a4d4ae;
+  --bloqueado: #e0e0e0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--fondo);
+  color: var(--texto);
+  padding: 1rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  color: var(--rosado);
+}
+
+main {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 2rem;
+}
+
+.semestre {
+  background-color: var(--rosado-suave);
+  padding: 1rem;
+  border-radius: 10px;
+  min-width: 250px;
+  flex-shrink: 0;
+}
+
+.semestre h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--rosado);
+}
+
+.ramo {
+  background-color: var(--rosa);
+  border: none;
+  padding: 0.6rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ramo:hover {
+  background-color: var(--rosado);
+}
+
+.ramo.aprobado {
+  background-color: var(--aprobado);
+  text-decoration: line-through;
+  color: #555;
+}
+
+.ramo.bloqueado {
+  background-color: var(--bloqueado);
+  cursor: not-allowed;
+  color: #888;
+}
+
+#mensaje {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--rosado);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  max-width: 300px;
+  text-align: center;
+  display: none;
+}
+
+#mensaje.visible {
+  display: block;
+}
 
